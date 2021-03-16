@@ -1,0 +1,22 @@
+{
+  "name": "vue3-deep-dive",
+  "version": "1.0.0",
+  "description": "Notes and code of the course [Vue 3 Deep Dive with Evan You](https://www.vuemastery.com/courses/vue3-deep-dive-with-evan-you/vue3-overview/)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pinglu85/vue3-deep-dive.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pinglu85/vue3-deep-dive/issues"
+  },
+  "homepage": "https://github.com/pinglu85/vue3-deep-dive#readme",
+  "dependencies": {
+    "vue": "^3.0.7"
+  }
+}
