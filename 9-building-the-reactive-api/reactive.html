@@ -1,0 +1,100 @@
+<script>
+  let activeEffect;
+
+  class Dep {
+    subscribers = new Set();
+
+    depend() {
+      if (activeEffect) {
+        this.subscribers.add(activeEffect);
+      }
+    }
+
+    notify() {
+      this.subscribers.forEach((effect) => {
+        effect();
+      });
+    }
+  }
+
+  function watchEffect(effect) {
+    activeEffect = effect;
+    effect();
+    activeEffect = null;
+  }
+
+  // Vue 2 version
+  // function reactive(raw) {
+  //   Object.keys(raw).forEach((key) => {
+  //     const dep = new Dep();
+  //     let value = raw[key];
+  //
+  //     Object.defineProperty(raw, key, {
+  //       get() {
+  //         dep.depend();
+  //         return value;
+  //       },
+  //       set(newValue) {
+  //         value = newValue;
+  //         dep.notify();
+  //       },
+  //     });
+  //   });
+  //
+  //   return raw;
+  // }
+
+  const targetMap = new WeakMap();
+
+  function getDep(target, key) {
+    let depsMap = targetMap.get(target);
+    if (!depsMap) {
+      depsMap = new Map();
+      targetMap.set(target, depsMap);
+    }
+
+    let dep = depsMap.get(key);
+    if (!dep) {
+      dep = new Dep();
+      depsMap.set(key, dep);
+    }
+    return dep;
+  }
+
+  const reactiveHandlers = {
+    get(target, key, receiver) {
+      const dep = getDep(target, key);
+      dep.depend();
+      return Reflect.get(target, key, receiver);
+    },
+    set(target, key, value, receiver) {
+      const dep = getDep(target, key);
+      const result = Reflect.set(target, key, value, receiver);
+      dep.notify();
+      return result;
+    },
+    // additional traps
+    has() {
+      // triggered when using `key` in state
+    },
+    ownKeys() {
+      // triggered when using Object.keys(state)
+    },
+  };
+
+  // Vue 3 version
+  // Proxy and reactive handlers also work on arrays.
+  function reactive(raw) {
+    return new Proxy(raw, reactiveHandlers);
+  }
+
+  const state = reactive({
+    count: 0,
+  });
+
+  watchEffect(() => {
+    console.log(state.count);
+  }); // 0
+
+  state.count++; // 1
+</script>
