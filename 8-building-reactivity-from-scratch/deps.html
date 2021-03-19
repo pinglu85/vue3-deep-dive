@@ -1,0 +1,70 @@
+<script>
+  let activeEffect;
+
+  // We implement the `dep` as a class, because from an educational perspective,
+  // it is much easier to think about dependency as an object. For a more efficient
+  // implementation. we can simplify this and turn it into a plain `Set`.
+  class Dep {
+    constructor(value) {
+      this.subscribers = new Set();
+      this._value = value;
+    }
+
+    get value() {
+      this.depend();
+      return this._value;
+    }
+
+    set value(newValue) {
+      this._value = newValue;
+      this.notify();
+    }
+
+    depend() {
+      if (activeEffect) {
+        this.subscribers.add(activeEffect);
+      }
+    }
+
+    notify() {
+      this.subscribers.forEach((effect) => {
+        effect();
+      });
+    }
+  }
+
+  function watchEffect(effect) {
+    activeEffect = effect;
+    effect();
+    activeEffect = null;
+  }
+
+  const dep = new Dep('hello');
+
+  watchEffect(() => {
+    console.log(dep.value);
+  }); // effect run
+
+  dep.value = 'changed';
+
+  /**
+   * This implementation illustrates the basic idea, but it is far from
+   * bullet-proof in practical use cases. For instance, imagine we have
+   * the following code:
+   *
+   * const ok = new Dep(true);
+   * const msg = new Dep('hello');
+   *
+   * watchEffect(() => {
+   *   if (ok.value) {
+   *     console.log(msg.value);
+   *   } else {
+   *     console.log('false branch');
+   *   }
+   * });
+   *
+   * msg.value = 'changed';
+   *
+   * If we change `ok.value` to false, then no matter what value `msg.value` changes to, we should be able * to ignore the effect, in other words, we should be able to remove dependencies.
+   */
+</script>
