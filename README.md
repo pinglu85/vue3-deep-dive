@@ -2,7 +2,7 @@ Notes and code of the course [Vue 3 Deep Dive with Evan You](https://www.vuemast
 
 1. [Intro](1-intro/index.md)
 
-2. Rendering Mechanism
+2. [Rendering Mechanism](2-rendering-mechanism/index.md)
 
 3. How & when to use Render functions
 
