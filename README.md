@@ -28,3 +28,5 @@ Notes and code of the course [Vue 3 Deep Dive with Evan You](https://www.vuemast
 12. [Code organization](12-code-organization/index.md)
 
 13. [Logic Reuse](13-logic-reuse/index.md)
+
+14. [A Composition API Ecample](14-a-composition-api-example/fetch.html)
